@@ -21,7 +21,7 @@ pip3 install -r requirements.txt
 echo 'SECRET_KEY=your_secret_key' > djangochat/.env
 
 # you can do this manually, creating a .env file inside djangochat directory
-# and writing SECRET_KEY=<your_secret_key> in the first line
+# and writing SECRET_KEY=your_secret_key in the first line
 ```
 
 - Run django commands to generate migrations and run de server
