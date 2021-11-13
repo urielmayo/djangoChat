@@ -13,9 +13,7 @@ This project is currently using sqlite3 as database.
 pip3 install -r requirements.txt
 ```
 
-- Generate a secret key. This website is a key generator:
-
-[Djecrety](https://djecrety.ir/)  
+- Generate a secret key. You can use [Djecrety](https://djecrety.ir/) for example.
 
 
 - Create .env file to store the secret key:
