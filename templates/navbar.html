@@ -1,0 +1,13 @@
+<nav class=" navbar navbar-fixed-top navbar-dark bg-dark ">
+    <div class="container align-items-center">
+      <a class="navbar-brand" href="{% url 'users:logout' %}" style="text-decoration: none;">
+        <button class="btn btn-light">
+          LOGOUT  
+        </button>
+        </a>
+      {% if receiver.user %} {# if the web is not located in a chat, this tag should not be visible #}
+        <a class="navbar-brand" href="{% url 'chats:chats' %}"  style="text-decoration: none;">CHATS</a>  
+      {% endif %}  
+      <span class="navbar-text">{{view.request.user.get_full_name}}</span>
+    </div>
+</nav>

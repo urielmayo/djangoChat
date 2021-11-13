@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+<title>Chats</title>
+{% endblock %}
+
+{% block container %}
+    <div class="container border">
+        {# chats title #}
+        <div class="row bg-light align-items-center">
+            <div class="col-11">
+                <h2>CHATS</h2>
+            </div>
+            <div class="col-1">
+                <a href="{% url 'chats:list_profiles' %}">
+                    <button type="button" class="btn btn-outline-primary btn-sm form-control">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                        </svg>
+                        NEW    
+                    </button> 
+                </a>
+            </div>
+        </div>
+        
+        {# chats list #}
+        {% for chat in chats %}
+            <a href="{% url 'chats:detail' chat.pk%}" style="text-decoration: none;">
+                <div class="row border">
+                    <div class="container mb-3 mt-3">
+                        <div class="container">
+                            <div class="row">
+                                {% if chat.user_1.user.profile == request.user.profile%}
+                                    {{chat.user_2.user.get_full_name}}
+                                    
+                                {% else %}
+                                    {{chat.user_1.user.get_full_name}}
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                {# last message #}
+                                {% if chat.chat.last.sender == request.user.profile %}
+                                    <div class="col-auto  d-sm-inline-flex border rounded bg-primary text-white">
+                                        {{chat.chat.last.message}}
+                                    </div>
+                                {% else %}
+                                    <div class="col-auto  d-sm-inline-flex border rounded bg-secondary text-white">
+                                        {{chat.chat.last.message}}
+                                    </div>
+                                {% endif %}
+                                <div class="col-auto">
+                                    {{chat.chat.last.sent_date}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+            
+    </div>
+    <br>
+{% endblock %}  
