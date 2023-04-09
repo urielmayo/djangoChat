@@ -45,4 +45,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         )
         if user_form.is_valid():
             user_form.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
