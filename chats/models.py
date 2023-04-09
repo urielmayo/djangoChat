@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.timezone import now
 
 # Create your models here.
+
+
 class Chat(models.Model):
     user_1 = models.ForeignKey(
         'users.Profile',
@@ -23,12 +25,12 @@ class Message(models.Model):
     sender = models.ForeignKey(
         'users.Profile',
         on_delete=models.CASCADE,
-        related_name= 'sent_messages'
+        related_name='sent_messages'
     )
     receiver = models.ForeignKey(
         'users.Profile',
         on_delete=models.CASCADE,
-        related_name= 'received_messages'
+        related_name='received_messages'
     )
     chat = models.ForeignKey(
         'Chat',
@@ -40,4 +42,4 @@ class Message(models.Model):
     sent_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'from {self.sender} to {self.receiver}: {self.message}'
+        return f'{self.sender}: {self.message}'
