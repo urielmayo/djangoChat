@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -12,23 +12,22 @@ from users.models import Profile
 class ChatDetailView(LoginRequiredMixin,DetailView):
     template_name = 'detail_chat.html'
     model = Chat
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['messages'] = Message.objects.filter(chat=context['chat'].pk)
-        profile = context['view'].request.user.profile
+        profile = self.request.user.profile
         if context['chat'].user_1 == profile:
             context['receiver'] =  context['chat'].user_2
         else:
             context['receiver'] = context['chat'].user_1
-        print(context['receiver'].user.first_name)
         return context
 
 class ProfileChatsView(LoginRequiredMixin,ListView):
     model = Profile
     template_name = 'chats.html'
 
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = context['view'].request.user.profile
@@ -39,7 +38,7 @@ class ProfileChatsView(LoginRequiredMixin,ListView):
 def send_chat(request, pk):
     if request.method == 'POST':
         if request.POST['message-text'] != '':
-            chat = Chat.objects.get(pk = pk)
+            chat = get_object_or_404(Chat, pk=pk)
             if chat.user_1.user == request.user:
                 receiver = chat.user_2.user
             else:
@@ -61,13 +60,13 @@ def send_chat(request, pk):
     return redirect(reverse('chats:detail',kwargs = {'pk':pk}))
 
 
-class NewChatView(LoginRequiredMixin,ListView):
+class NewChatView(LoginRequiredMixin, ListView):
     template_name = 'list_profiles.html'
     model = Profile
     context_object_name = 'profiles'
     def get_queryset(self):
         return Profile.objects.exclude(pk = self.request.user.profile.pk)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         logged_profile = context['view'].request.user.profile
@@ -75,10 +74,10 @@ class NewChatView(LoginRequiredMixin,ListView):
 
         for chat in logged_profile.user_1.all():
             added_users[chat.user_2] = Chat.objects.get(user_1=logged_profile, user_2=chat.user_2).pk
-        
+
         for chat in logged_profile.user_2.all():
             added_users[chat.user_1] = Chat.objects.get(user_2=logged_profile, user_1=chat.user_1).pk
-        
+
         context['added_users'] = added_users
         return context
 
