@@ -39,7 +39,7 @@ class ProfileChatsView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileChatsView, self).get_context_data(**kwargs)
-        context
+        context['profile'] = self.request.user.profile
         return context
 
 

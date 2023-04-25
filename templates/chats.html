@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block head_content %}
 <title>Chats</title>
@@ -21,24 +21,42 @@
                     {% for chat in chats %}
                     <a class="list-group-item mb-1 mt-1" href="{% url 'chats:detail' chat.pk%}">
                         <div class="d-flex">
-                            {% if chat.user1 == profile %}
-                                <div class="flex-shrink-0">
-                                    <img width="60"
-                                        height="60"
-                                        src="{{chat.user_2.picture.url}}">
-                                </div>
+                            {% if chat.user_1 == profile %}
+
+                                {% if chat.user_2.picture %}
+                                    <div class="flex-shrink-0">
+                                        <img width="80"
+                                            height="80"
+                                            src="{{chat.user_2.picture.url}}">
+                                    </div>
+                                {% else %}
+                                    <div class="flex-shrink-0">
+                                        <img width="80"
+                                            height="80"
+                                            src="{% static 'img/ann.jpeg' %}">
+                                    </div>
+                                {% endif %}
+
                                 <div class="flex flex-columns ms-5">
                                     <strong>{{chat.user_2.user.get_full_name}}</strong>
                                     <p>{{chat.messages.last}}</p>
 
                                 </div>
+
                             {% else %}
+                                {% if chat.user_1.picture %}
                                 <div class="flex-shrink-0">
-                                    <img class="img-fluid"
-                                        width="60"
-                                        height="60"
+                                    <img width="80"
+                                        height="80"
                                         src="{{chat.user_1.picture.url}}">
                                 </div>
+                                {% else %}
+                                    <div class="flex-shrink-0">
+                                        <img width="80"
+                                            height="80"
+                                            src="{% static 'img/ann.jpeg' %}">
+                                    </div>
+                                {% endif %}
                                 <div class="flex flex-columns ms-5">
                                     <strong>{{chat.user_1.user.get_full_name}}</strong>
                                     <p>{{chat.messages.last}}</p>
