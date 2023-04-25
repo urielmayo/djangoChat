@@ -7,6 +7,7 @@ from django.db.models import Q
 
 from chats.models import Message, Chat
 from users.models import Profile
+
 # Create your views here.
 
 
@@ -56,19 +57,17 @@ def send_chat(request, pk):
                 sender=request.user.profile,
                 receiver=receiver.profile,
                 chat=chat,
-                message=request.POST['message-text']
+                message=request.POST['message-text'],
             )
             chat.last_message = now()
             chat.save()
             return redirect(reverse('chats:detail', kwargs={'pk': pk}))
         else:
-            context = {
-                'error': 'mensaje vacio'
-            }
+            context = {'error': 'mensaje vacio'}
             return render(
                 request,
                 reverse('chats:detail', kwargs={'pk': pk}),
-                context=context
+                context=context,
             )
     return redirect(reverse('chats:detail', kwargs={'pk': pk}))
 
@@ -88,14 +87,12 @@ class NewChatView(LoginRequiredMixin, ListView):
 
         for chat in logged_profile.user_1.all():
             added_users[chat.user_2] = Chat.objects.get(
-                user_1=logged_profile,
-                user_2=chat.user_2
+                user_1=logged_profile, user_2=chat.user_2
             ).pk
 
         for chat in logged_profile.user_2.all():
             added_users[chat.user_1] = Chat.objects.get(
-                user_2=logged_profile,
-                user_1=chat.user_1
+                user_2=logged_profile, user_1=chat.user_1
             ).pk
 
         context['added_users'] = added_users

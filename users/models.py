@@ -12,7 +12,7 @@ class Profile(models.Model):
     picture = models.ImageField(
         upload_to='users/profile_pictures',
         blank=True,
-        null=True
+        null=True,
     )
 
     def __str__(self):

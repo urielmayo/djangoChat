@@ -8,12 +8,12 @@ class Chat(models.Model):
     user_1 = models.ForeignKey(
         'users.Profile',
         on_delete=models.CASCADE,
-        related_name='user_1'
+        related_name='user_1',
     )
     user_2 = models.ForeignKey(
         'users.Profile',
         on_delete=models.CASCADE,
-        related_name='user_2'
+        related_name='user_2',
     )
     last_message = models.DateTimeField(blank=True, default=now)
 
@@ -25,17 +25,17 @@ class Message(models.Model):
     sender = models.ForeignKey(
         'users.Profile',
         on_delete=models.CASCADE,
-        related_name='sent_messages'
+        related_name='sent_messages',
     )
     receiver = models.ForeignKey(
         'users.Profile',
         on_delete=models.CASCADE,
-        related_name='received_messages'
+        related_name='received_messages',
     )
     chat = models.ForeignKey(
         'Chat',
         on_delete=models.CASCADE,
-        related_name='messages'
+        related_name='messages',
     )
 
     message = models.TextField()

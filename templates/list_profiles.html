@@ -6,33 +6,33 @@
 {% endblock %}
 
 {% block container %}
-    <div class="container border rounded">
-        <div class="row bg-light align-items-center">
-            <div class="col-11">
-                <h2>NEW CHATS</h2>
+<div class="container border rounded">
+    <div class="row bg-light align-items-center">
+        <div class="col-11">
+            <h2>NEW CHATS</h2>
+        </div>
+    </div>
+
+    {% for profile in profiles %}
+    {% if profile in added_users.keys %}
+    <a href="{% url 'chats:detail' added_users|get_value:profile %}" style="text-decoration: none;">
+        <div class="row border">
+            <div class="container mb-3 mt-3">
+                {{profile.user.get_full_name}} - Ir al Chat
             </div>
         </div>
-        
-        {% for profile in profiles %}
-            {% if profile in added_users.keys %}
-                <a href="{% url 'chats:detail' added_users|get_value:profile %}" style="text-decoration: none;">
-                    <div class="row border">
-                        <div class="container mb-3 mt-3">
-                            {{profile.user.get_full_name}} - Ir al Chat
-                        </div>
-                    </div>
-                </a>
-            {% else %}
-                <a href="{% url 'chats:create' profile.pk%}" style="text-decoration: none;">
-                    <div class="row border">
-                        <div class="container mb-3 mt-3">
-                            {{profile.user.get_full_name}} - Iniciar Chat
-                        </div>
-                    </div>
-                </a>
-            {% endif %}
-        {% endfor %}
-        
-            
-    </div>
+    </a>
+    {% else %}
+    <a href="{% url 'chats:create' profile.pk%}" style="text-decoration: none;">
+        <div class="row border">
+            <div class="container mb-3 mt-3">
+                {{profile.user.get_full_name}} - Iniciar Chat
+            </div>
+        </div>
+    </a>
+    {% endif %}
+    {% endfor %}
+
+
+</div>
 {% endblock container %}

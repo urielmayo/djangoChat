@@ -8,56 +8,57 @@
 
 
 {% block container %}
+<div class="container">
+    {# chat history #}
     <div class="container">
-        {# chat history #}
-        <div class="container">
-            <h2>{{receiver.user.first_name}} {{receiver.user.last_name}}</h2>
-            <div class=" p-3 border rounded overflow-auto" style=" height: 450px;">
-                {% for message in messages %}
-                    {% if message.sender.user.profile != request.user.profile %}
-                        {# receiver messages#}
-                        <div class="d-flex flex-row bd-highlight">
-                            <div class=" d-sm-inline-flex p-1 border rounded bg-secondary text-white">
-                                {{message.message}}
-                            </div>
-                        </div>
-                        <p class="small text-start">{{message.sent_date}}</p>
-                    {% else %}
-                        <div class="d-flex flex-row-reverse">
-                            {# sender messages#}
-                            <div class=" d-sm-inline-flex justify-content-end p-1 border rounded bg-primary text-white text-end">
-                                {{message.message}}
-                            </div>
-                        </div>
-                        <p class="small text-end">{{message.sent_date|localtime}}</p>
-                    {% endif %}
-                {% endfor %}
+        <h2>{{receiver.user.first_name}} {{receiver.user.last_name}}</h2>
+        <div class=" p-3 border rounded overflow-auto" style=" height: 450px;">
+            {% for message in messages %}
+            {% if message.sender.user.profile != request.user.profile %}
+            {# receiver messages#}
+            <div class="d-flex flex-row bd-highlight">
+                <div class=" d-sm-inline-flex p-1 border rounded bg-secondary text-white">
+                    {{message.message}}
+                </div>
+            </div>
+            <p class="small text-start">{{message.sent_date}}</p>
+            {% else %}
+            <div class="d-flex flex-row-reverse">
+                {# sender messages#}
+                <div class=" d-sm-inline-flex justify-content-end p-1 border rounded bg-primary text-white text-end">
+                    {{message.message}}
+                </div>
+            </div>
+            <p class="small text-end">{{message.sent_date|localtime}}</p>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        {# form to send message #}
+        {% if error %}
+        <div class="invalid-feedback">
+            {{error}}
+        </div>
+        {% endif %}
+
+        <form class="form-inline mt-2" action="{% url 'chats:sendchat' chat.pk%}" method="POST">
+            {% csrf_token %}
+            <div class="from-group">
+                <div class="row">
+                    <div class="col-11">
+                        <input type="text" name="message-text" placeholder="Ingresar mensaje" class="form-control"
+                            required>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary form-control" type="submit">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {# form to send message #}
-            {% if error %}
-                <div class="invalid-feedback">
-                    {{error}}
-                </div>
-            {% endif %}
-                
-            <form class="form-inline mt-2" action="{% url 'chats:sendchat' chat.pk%}" method="POST">
-                {% csrf_token %}  
-                <div class="from-group">
-                    <div class="row">
-                        <div class="col-11">
-                            <input type="text" name="message-text" placeholder="Ingresar mensaje" class="form-control" required>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-primary form-control" type="submit">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>  
-               
-            </form>
-            <br>
-        </div>
+        </form>
+        <br>
     </div>
+</div>
 {% endblock container %}
