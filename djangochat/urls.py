@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('users.urls', 'users'), namespace='users')),
     path('', include(('chats.urls', 'chats'), namespace='chats')),
+    path('apis/', include(('apis.urls', 'apis'), namespace='apis')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
