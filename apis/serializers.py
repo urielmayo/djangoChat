@@ -7,7 +7,7 @@ from users.models import Profile
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['user']
+        fields = '__all__'
 
 
 class ChatSerializer(serializers.ModelSerializer):
