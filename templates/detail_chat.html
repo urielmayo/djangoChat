@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load tz %}
+{% load static %}
 {% get_current_timezone as TIME_ZONE %}
 
 {% block head_content %}
@@ -11,8 +12,19 @@
 <div class="container">
     {# chat history #}
     <div class="container">
-        <h2>{{receiver.user.first_name}} {{receiver.user.last_name}}</h2>
-        <div class=" p-3 border rounded overflow-auto" style=" height: 450px;">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                {% if receiver.picture %}
+                <img width="50" height="50" style="border-radius: 50%;" src="{{receiver.picture.url}}">
+                {% else %}
+                <img width="50" height="50" style="border-radius: 50%;" src="{% static 'img/ann.jpeg' %}">
+                {% endif %}
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <h2>{{receiver.user.get_full_name}}</h2>
+            </div>
+        </div>
+        <div class=" mt-3 p-3 border rounded overflow-auto" style=" height: 450px;">
             {% for message in messages %}
             {% if message.sender.user.profile != request.user.profile %}
             {# receiver messages#}
