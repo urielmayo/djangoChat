@@ -5,33 +5,31 @@ from users.models import Profile
 
 
 class SignUpForm(forms.Form):
-
     username = forms.CharField(
         min_length=4,
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     password = forms.CharField(
         max_length=70,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
     password_confirmation = forms.CharField(
         max_length=70,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
     first_name = forms.CharField(
         min_length=2,
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     last_name = forms.CharField(
-        max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     email = forms.CharField(
         min_length=6,
         max_length=70,
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
     )
 
     def clean_username(self):
@@ -65,6 +63,22 @@ class SignUpForm(forms.Form):
 class ProfileForm(forms.ModelForm):
     """Form definition for Profile."""
 
+    first_name = forms.CharField(
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    email = forms.EmailField(
+        max_length=254,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
     class Meta:
         """Meta definition for Profileform."""
 
@@ -75,27 +89,21 @@ class ProfileForm(forms.ModelForm):
             'picture': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        instance = kwargs.get('instance')
+        if instance:
+            user = instance.user
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial = user.last_name
+            self.fields['email'].initial = user.email
 
-class UserUpdateForm(forms.ModelForm):
-    """Form definition for User."""
+    def save(self):
+        data = self.cleaned_data
+        profile = self.instance
 
-    class Meta:
-        """Meta definition for UserUpdateForm."""
-
-        model = User
-        fields = ('first_name', 'last_name', 'email')
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-    def clean(self):
-        data = super().clean()
-        msg_error = ''
-        for field, value in data.items():
-            if not value:
-                msg_error += f'No {field} was provided\n'
-        if msg_error:
-            raise forms.ValidationError(msg_error)
-        return data
+        profile.user.first_name = data.get('first_name')
+        profile.user.last_name = data.get('last_name')
+        profile.user.email = data.get('email')
+        profile.user.save()
+        return super().save()

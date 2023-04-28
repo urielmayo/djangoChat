@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from users.models import Profile
 
-from users.forms import SignUpForm, ProfileForm, UserUpdateForm
+from users.forms import SignUpForm, ProfileForm
 
 # Create your views here.
 
@@ -34,22 +34,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('chats:chats')
     form_class = ProfileForm
 
-    def get_context_data(self, **kwargs):
-        context = super(ProfileUpdateView, self).get_context_data(**kwargs)
-        context['user_form'] = UserUpdateForm(instance=self.request.user)
-        return context
-
     def get_object(self, queryset=None):
         # Get the Profile object for the current user
         return get_object_or_404(Profile, user=self.request.user)
-
-    def form_valid(self, form):
-        user_form = UserUpdateForm(
-            instance=self.request.user,
-            data=self.request.POST,
-        )
-        if user_form.is_valid():
-            user_form.save()
-        else:
-            return self.form_invalid(form)
-        return super().form_valid(form)
